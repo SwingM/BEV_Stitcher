@@ -3,10 +3,10 @@
 import cv2
 import numpy as np
 
-from config import CONFIG
-from splitter.image_splitter import ImageSplitter
-from utils.io_utils import save_image
-from utils.visualization import draw_grid_overlay
+from uav_mapping_project.config import CONFIG
+from uav_mapping_project.splitter.image_splitter import ImageSplitter
+from uav_mapping_project.utils.io_utils import save_image
+from uav_mapping_project.utils.visualization import draw_grid_overlay
 
 
 def _build_synthetic_map(size: tuple[int, int]) -> np.ndarray:

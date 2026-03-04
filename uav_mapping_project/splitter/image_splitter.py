@@ -6,7 +6,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from utils.io_utils import save_image
+from uav_mapping_project.utils.io_utils import save_image
 
 
 @dataclass(frozen=True)

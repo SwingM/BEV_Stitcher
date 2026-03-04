@@ -2,12 +2,13 @@
 
 from abc import ABC, abstractmethod
 
-import numpy as np
+from uav_mapping_project.partition.region import Region
+from uav_mapping_project.stitcher.global_map import GlobalMap
 
 
 class BasePartitioner(ABC):
     """Defines a replaceable API for map region partitioning."""
 
     @abstractmethod
-    def partition(self, map_image: np.ndarray, num_regions: int) -> list[tuple[int, int, int, int]]:
+    def partition(self, global_map: GlobalMap, num_regions: int) -> list[Region]:
         """Split the map into connected exploration regions."""

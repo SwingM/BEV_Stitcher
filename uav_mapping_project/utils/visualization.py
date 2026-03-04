@@ -5,6 +5,8 @@ from typing import Sequence
 import cv2
 import numpy as np
 
+from uav_mapping_project.partition.region import Region
+
 
 def draw_grid_overlay(
     image: np.ndarray,
@@ -28,7 +30,7 @@ def draw_grid_overlay(
 
 def draw_partition_overlay(
     image: np.ndarray,
-    regions: Sequence[tuple[int, int, int, int]],
+    regions: Sequence[Region],
     alpha: float = 0.35,
 ) -> np.ndarray:
     """Render colored bounding boxes for each region and blend with the map image."""
@@ -44,13 +46,14 @@ def draw_partition_overlay(
         (80, 255, 255),
     ]
 
-    for idx, (x_min, y_min, x_max, y_max) in enumerate(regions):
+    for idx, region in enumerate(regions):
+        x_min, y_min, x_max, y_max = region.bbox_pixel
         color = palette[idx % len(palette)]
         cv2.rectangle(overlay, (x_min, y_min), (x_max, y_max), color, thickness=-1)
         cv2.rectangle(base, (x_min, y_min), (x_max, y_max), color, thickness=2)
         cv2.putText(
             base,
-            f"R{idx}",
+            f"R{region.id}",
             (x_min + 8, y_min + 22),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.7,

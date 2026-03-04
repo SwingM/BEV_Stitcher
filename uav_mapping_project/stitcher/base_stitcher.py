@@ -4,6 +4,8 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
+from uav_mapping_project.stitcher.global_map import GlobalMap
+
 
 class BaseStitcher(ABC):
     """Defines a replaceable stitching API."""
@@ -13,9 +15,9 @@ class BaseStitcher(ABC):
         """Add one tile and its metadata to the internal state."""
 
     @abstractmethod
-    def build_map(self) -> np.ndarray:
+    def build_map(self) -> GlobalMap:
         """Build and return the global map from all previously added tiles."""
 
     @abstractmethod
-    def get_map(self) -> np.ndarray | None:
+    def get_map(self) -> GlobalMap | None:
         """Return the already-built map, or ``None`` if not built yet."""

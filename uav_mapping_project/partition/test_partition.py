@@ -2,10 +2,11 @@
 
 import cv2
 
-from config import CONFIG
-from partition.grid_partition import GridPartitioner
-from utils.io_utils import save_image
-from utils.visualization import draw_partition_overlay
+from uav_mapping_project.config import CAMERA_CONFIG, CONFIG
+from uav_mapping_project.partition.grid_partition import GridPartitioner
+from uav_mapping_project.stitcher.global_map import GlobalMap
+from uav_mapping_project.utils.io_utils import save_image
+from uav_mapping_project.utils.visualization import draw_partition_overlay
 
 
 def main() -> None:
@@ -18,14 +19,22 @@ def main() -> None:
             f"Stitched map not found at {stitched_map_path}. Run test_stitcher.py first."
         )
 
-    partitioner = GridPartitioner()
-    regions = partitioner.partition(map_image, CONFIG.num_regions)
+    resolution = CAMERA_CONFIG.altitude / CAMERA_CONFIG.fx
+    global_map = GlobalMap(image=map_image, resolution=resolution, origin=CONFIG.default_origin)
 
-    overlay = draw_partition_overlay(map_image, regions)
+    partitioner = GridPartitioner()
+    regions = partitioner.partition(global_map, CONFIG.num_regions)
+
+    overlay = draw_partition_overlay(global_map.image, regions)
     save_image(overlay, output_path)
 
     print(f"Partition count: {len(regions)}")
     print(f"Overlay saved to: {output_path}")
+    for region in regions:
+        print(
+            f"Region {region.id}: px={region.bbox_pixel}, m=({region.bbox_meter[0]:.2f}, "
+            f"{region.bbox_meter[1]:.2f}, {region.bbox_meter[2]:.2f}, {region.bbox_meter[3]:.2f})"
+        )
 
 
 if __name__ == "__main__":
